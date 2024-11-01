@@ -13,6 +13,7 @@
   "dependencies": {
     "@zodyac/zod-mongoose": "^3.0.0",
     "cheerio": "^1.0.0",
+    "dotenv": "^16.4.5",
     "md5": "^2.3.0",
     "mongoose": "^8.8.0",
     "playwright": "^1.48.2"

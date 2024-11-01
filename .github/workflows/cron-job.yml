@@ -8,6 +8,8 @@ on:
 jobs:
   run-playwright-script:
     runs-on: ubuntu-latest
+    env:  # Set environment variables for the job
+      MONGO_URI: ${{ secrets.MONGO_URI }}  # Use repository secret for MongoDB URI
 
     steps:
       - name: Checkout repository

@@ -1,4 +1,5 @@
 const { z, Image } = require('../utils');
+const md5 = require('md5');
 
 class Source {
     __title;
@@ -6,16 +7,11 @@ class Source {
     __url;
     __image;
 
-    constructor({
-        title,
-        description,
-        url,
-        image,
-    }) {
-        this.__title = title;
-        this.__description = description;
-        this.__url = url;
-        this.__image = image;
+    constructor(initialValues = {}) {
+        this.__title = initialValues.title || '';
+        this.__description = initialValues.description || '';
+        this.__url = initialValues.url || '';
+        this.__image = initialValues.image || '';
     }
 
     //#region getters
@@ -57,6 +53,7 @@ class Source {
     //#region methods
     async toJSON() {
         return {
+            id: md5(this.__url),
             title: this.__title,
             description: this.__description,
             url: this.__url,
@@ -64,13 +61,14 @@ class Source {
         };
     }
 
-    async toZod() {
+    static toZod() {
         return z.object({
+            id: z.string().optional(),
             title: z.string().optional(),
             description: z.string().optional(),
             url: z.string().optional(),
-            image: await new Image().toZod()
-        });
+            image: Image.toZod()
+        }).optional();
     }
 
     async save() {

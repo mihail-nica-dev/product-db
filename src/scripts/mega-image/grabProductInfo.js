@@ -1,6 +1,5 @@
 const cheerio = require('cheerio');
-const { ProductDetailsSchema } = require('./schemas');
-const { wait } = require('./config');
+const { wait } = require('../../utils/time');
 /**
  * Extracts nutrition, ingredient, and description data from an accordion structure on the page.
  * @param {string} html - The HTML content of the page.
@@ -30,7 +29,15 @@ const extractAccordionData = async (html) => {
         }
 
         // Check for ingredient data
-        if (title.toLowerCase().includes('ingrediente') || title.toLowerCase().includes('alcool')) {
+        if (title.toLowerCase().includes('alcool')) {
+            const contentRaw = $(item).find('div').text().split('\n');
+            const content = contentRaw[contentRaw.length - 1];
+            data[title.toLowerCase()] = {
+                title,
+                data: content
+            };
+        }
+        if (title.toLowerCase().includes('ingrediente')) {
             const contentRaw = $(item).find('div').text().split('\n');
             const content = contentRaw[contentRaw.length - 1];
             data[title.toLowerCase()] = {
