@@ -1,7 +1,7 @@
 const { devices } = require('playwright');
 module.exports = {
     browser: {
-        headless: false
+        // headless: false
     },
     context: {
         ...devices['iPhone 14'],
