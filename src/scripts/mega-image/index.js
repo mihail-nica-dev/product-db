@@ -148,6 +148,7 @@ const scrapeCategory = async (categoryUrl) => {
 module.exports = {
     scrape: async () => {
         for(const category of categories) {
+            console.log(`Scraping ${category}`);
             await scrapeCategory(category);
         }
     }

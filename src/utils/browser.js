@@ -40,11 +40,13 @@ const getBrowser = async (config = {}) => {
             wsEndpoint: process.env.BROWSERLESS_URL
         });
         context = await browser.newContext(config);
-        events.emit('ready:browser');
     }
     console.log('Returning context');
     return context;
 };
+getBrowser().then(() => {
+    events.emit('ready:browser');
+});
 module.exports = {
     scrollPage,
     getScrollHeight,

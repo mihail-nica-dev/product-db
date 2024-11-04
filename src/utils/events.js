@@ -6,7 +6,6 @@ const events = new EventEmitter();
 const ready = {
     mongo: false,
     browser: false,
-    server: false
 };
 const emitReady = (key) => {
     ready[key] = true;
