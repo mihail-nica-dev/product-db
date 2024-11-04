@@ -35,11 +35,16 @@ let context;
 const getBrowser = async (config = {}) => {
     console.log('Getting browser', process.env.BROWSERLESS_URL);
     if(!browser) {
-        console.log('Connecting to browserless');
-        browser = await playwright.chromium.connect({
-            wsEndpoint: process.env.BROWSERLESS_URL
+        try {
+            console.log('Connecting to browserless');
+            browser = await playwright.chromium.connect({
+                wsEndpoint: process.env.BROWSERLESS_URL
         });
-        context = await browser.newContext(config);
+            context = await browser.newContext(config);
+        } catch (err) {
+            console.log('Failed to connect to browserless, retrying...');
+            return await new Promise((resolve, reject) => setTimeout(() => resolve(getBrowser(config)), 1000));
+        }
     }
     console.log('Returning context');
     return context;
