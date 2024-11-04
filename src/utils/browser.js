@@ -1,5 +1,7 @@
+require('dotenv').config();
 const playwright = require('playwright');
-const { firefox } = playwright;
+const { events } = require('./events');
+const { chromium } = require('playwright');
 
 /**
  * Scrolls the page in a specified direction.
@@ -28,10 +30,24 @@ const scrollToElement = async (page, selector) => {
     await page.evaluate(({selector, offset}) => document.querySelector(selector).scrollIntoView({block: 'start', inline: 'nearest', behavior: 'smooth', top: offset}), {selector, offset});
 };
 const getScrollHeight = (page) => page.evaluate(() => document.body.scrollHeight);
-
+let browser;
+let context;
+const getBrowser = async (config = {}) => {
+    console.log('Getting browser', process.env.BROWSERLESS_URL);
+    if(!browser) {
+        console.log('Connecting to browserless');
+        browser = await playwright.chromium.connect({
+            wsEndpoint: process.env.BROWSERLESS_URL
+        });
+        context = await browser.newContext(config);
+        events.emit('ready:browser');
+    }
+    console.log('Returning context');
+    return context;
+};
 module.exports = {
-    firefox,
     scrollPage,
     getScrollHeight,
-    scrollToElement
+    scrollToElement,
+    getBrowser
 };

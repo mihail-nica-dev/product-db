@@ -1,7 +1,7 @@
-const { firefox, wait, Image } = require('../../utils');
+const {  wait, Image } = require('../../utils');
 const { browser: browserConfig, context: contextConfig } = require('../../../config');
 const { grabProducts } = require('./grabProducts');
-const { scrollPage, getScrollHeight, scrollToElement } = require('../../utils/browser');
+const { scrollPage, getScrollHeight, scrollToElement, getBrowser } = require('../../utils/browser');
 const cheerio = require('cheerio');
 const { extractAccordionData } = require('./grabProductInfo');
 const { Metadata } = require('../../schema/metadata');
@@ -43,9 +43,9 @@ const categories = [
     "https://www.mega-image.ro/produse-noi"
 ];
 const scrapeCategory = async (categoryUrl) => {
+    console.log(`Scraping ${categoryUrl}`);
     let products = [];
-    const browser = await firefox.launch(browserConfig);
-    const context = await browser.newContext(contextConfig);
+    const context = await getBrowser(contextConfig);
     const page = await context.newPage();
     await page.goto(`https://www.mega-image.ro`);
     await page.waitForLoadState('load');
