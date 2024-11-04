@@ -61,7 +61,7 @@ const scrapeCategory = async (categoryUrl) => {
     await wait(1000);
     await acceptCookies(page);
     await wait(1000);
-    for(const i of [1,2]) {
+    for(const i of Array({length:process.env.SCROLL_PAGES || 5}).keys()) {
         await scrollPage(page, 'up', 100, 10);
         await scrollToElement(page, '[data-testid="vertical-load-more-wrapper"]');
         await wait(1000 * i);
