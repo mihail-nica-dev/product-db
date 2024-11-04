@@ -6,6 +6,7 @@ const cheerio = require('cheerio');
 const { extractAccordionData } = require('./grabProductInfo');
 const { Metadata } = require('../../schema/metadata');
 const { Product,Source } = require('../../schema');
+const _ = require('lodash');
 /**
  * Accepts cookies on the page if the cookie popup is present.
  * @param {import('playwright').Page} page - The Playwright page instance.
@@ -19,7 +20,7 @@ const acceptCookies = async (page) => {
     });
     await wait(1000);
 };
-const categories = [
+const categories = _.shuffle([
     "https://www.mega-image.ro/Fructe-si-legume-proaspete/c/001",
     "https://www.mega-image.ro/Lactate-si-oua/c/002",
     "https://www.mega-image.ro/Mezeluri-carne-si-ready-meal/c/003",
@@ -41,7 +42,7 @@ const categories = [
     "https://www.mega-image.ro/halloween?utm_source=homepage&utm_medium=mega+menu&utm_campaign=halloween",
     "https://www.mega-image.ro/exclusiv-online",
     "https://www.mega-image.ro/produse-noi"
-];
+]);
 const scrapeCategory = async (categoryUrl) => {
     console.log(`Scraping ${categoryUrl}`);
     let products = [];
@@ -71,6 +72,8 @@ const scrapeCategory = async (categoryUrl) => {
     products = products.filter((v,i,s) => s.findIndex(v2 => v2.id === v.id) === i);
     console.log(`Products: ${products.length}`);
     for(const p of products) {
+        const context = await getBrowser(contextConfig);
+        const page = await context.newPage();
         await page.goto(`https://www.mega-image.ro${p.product_url}`);
         await wait(1000);
         await scrollPage(page, 'down', 100, 10);
